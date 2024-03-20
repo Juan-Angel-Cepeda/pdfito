@@ -7,36 +7,25 @@
       accepted: [],
       rejected: []
     };
-
-    let button = false
-    function setTrue(){
-      button = true
-    }
-    
   
     async function handleFilesSelect(e) {
-      setAppStatusLoading();
       const { acceptedFiles, fileRejections } = e.detail;
       
       files.accepted = [...files.accepted, ...acceptedFiles];
       files.rejected = [...files.rejected, ...fileRejections];
 
-
       if(acceptedFiles.length > 0){
         
-        const formDataFiles = [];
-        files.accepted.forEach(file => {
-            const formData = new FormData()
-            formData.append(file)
-            formDataFiles.append(formData)
-        })
+        setAppStatusLoading();
+        const formData = new FormData();
+        formData.append('file', acceptedFiles[0])
         
-        const res = await fetch('api/upload', {
+        const response = await fetch('api/upload', {
           method: 'POST',
-          body: formDataFiles
+          body: formData
         })
 
-        if (!res.ok){
+        if (!response.ok){
             setAppStatusError();
             return
         }
@@ -48,13 +37,15 @@
     }
   </script>
 
-  {#if button === false} 
-    <Dropzone 
-    accept="application/pdf" on:drop={handleFilesSelect}
-    >Arrastra y suelta aquí tu PDF </Dropzone>
-  {/if}
+  
 
-  <button disabled={files.length === 0}>A por ellos</button>
+  {#if files.accepted.length === 0}
+    <Dropzone 
+    accept="application/pdf" 
+    multiple={false} 
+    on:drop={handleFilesSelect}>Arrastra y suelta aquí tu PDF </Dropzone>
+  {/if}
+  
 
   <ol>
     {#each files.accepted as item}

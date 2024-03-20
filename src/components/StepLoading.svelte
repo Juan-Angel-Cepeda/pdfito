@@ -5,6 +5,6 @@
 <div class="flex justify-center items-center flex-col gap-y-2">
     <Spinner/>
     <p class="opacity-80">
-        Analizando tus PDFs
+        Analizando el PDF
     </p>
 </div>
